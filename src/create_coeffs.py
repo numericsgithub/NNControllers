@@ -1,3 +1,4 @@
+import math
 import os
 import time
 
@@ -5,7 +6,14 @@ from tqdm import tqdm
 
 os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 import pydot
+from gvgen import GvGen
+
+import pydot
 import numpy as np
+
+# constants are only used for visualization
+POWER_TWOS = [-32768, -16384, -8192, -4096, -2048, -1024, -512, -256, -128, -64, -32, -16, -8, -4, -2, -1, 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
+POWER_TWOS_ABS = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
 
 def show_graph(g):
     with open("my.dot", "w") as w:
@@ -158,10 +166,13 @@ def draw_coeff_add_set(coeffs, additions, l, k):
             _ = g.newLink(coeff_node_map[a], coeff_node_map[a+b])
             _ = g.newLink(coeff_node_map[b], coeff_node_map[a+b])
             for r in rest:
-                if r / (a+b) == r // (a+b):
-                    if a+b != r:
-                        _ = g.newLink(coeff_node_map[a+b], coeff_node_map[r])
-                    rest_done.append(r)
+                if r / (a+b) == r // (a+b): # if it is divisible
+                    divisor = r // (a + b)
+                    if divisor in POWER_TWOS:  # if divisor is representable as a shift
+                        if a + b != r:  # if it is not itself
+                            _ = g.newLink(coeff_node_map[a + b], coeff_node_map[r])
+                            g.propertyAppend(_, "label", str(POWER_TWOS_ABS.index(abs(divisor)) - 1))
+                        rest_done.append(r)
 
     # draw all that are wrong!
     missing_connections = [x for x in rest if x not in rest_done]
@@ -181,7 +192,7 @@ def writeAddFile(coeffs, prefix, l):
         f.write(result)
 
 
-for l in tqdm(range(16)):
+for l in tqdm(range(16), desc="cost-0"):
     cur = gen_K_0_l(l)
     print(f"K_0_{l} = Got {cur}")
     writeAddFile([cur], "10", l-1)
@@ -198,17 +209,13 @@ for l in tqdm(range(16)): #range(16):
 
 print()
 
-for l in tqdm(range(16)): # 14,16
+for l in tqdm(range(16), desc="cost-2"): # 14,16
     start = time.time()
     cur, cur_adds = gen_K_2_l(l)
-    # for i in range(10):
-    #     gen_K_2_l(l)
     # for i in range(len(cur)):
     #     draw_coeff_add_set(cur[i], cur_adds[i], l, 2)
     print(f"K_2_{l} = Got {len(cur)} sets: ", "took: ", time.time()-start)
     writeAddFile(cur, "12", l-1)
-
-exit(0)
 
 # Why those coeffs?
 # The fully parallel architecture allows some tricks!
