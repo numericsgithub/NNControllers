@@ -18,5 +18,7 @@ pip install onnx==1.13.1
 ```
 - run the create_coeff.py
 - run the create_scripts.py in the expiriments/ folder (Choose old or new method there. The old one is the original from the paper. Later I found out that with more optimization of the code and by removing memory leaks results get better with a much much bigger batch size...)
+
+# Run the experiments
 - run the all_experiments.sh in the expiriments/ folder
 - run the create_plots.py to see results
