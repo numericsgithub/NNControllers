@@ -1,6 +1,6 @@
 # General
 Repository for the trianing for: Hardware-Aware Quantization for Multiplierless
-Neural Network Controllers (https://ieeexplore.ieee.org/document/10090271) (https://hal.science/hal-03827660/) (
+Neural Network Controllers (https://ieeexplore.ieee.org/document/10090271) (https://hal.science/hal-03827660/)
 
 T. Habermann, J. Kühle, M. Kumm and A. Volkova, "Hardware-Aware Quantization for Multiplierless Neural Network Controllers," 2022 IEEE Asia Pacific Conference on Circuits and Systems (APCCAS), Shenzhen, China, 2022, pp. 541-545, doi: 10.1109/APCCAS55924.2022.10090271.
 keywords: {Training;Quantization (signal);VHDL;Embedded systems;Throughput;Hardware;Safety;neural network controllers;machine learning;hardware-aware quantization;quantization-aware training}, 
